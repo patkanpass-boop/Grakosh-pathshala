@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Grahakosha Pathshala</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪔</text></svg>">
+<style>
+:root{
+  --paper:#F2F1F7; --surface:#FFFFFF; --ink:#1D1A3A; --muted:#5E5A7A; --line:#D8D5E6;
+  --indigo:#3B2F8F; --turmeric:#C98E0A; --turmeric-soft:#F6E7BF; --good:#2E6B5E; --good-soft:#DCEFE9;
+  --bad:#B23A26; --bad-soft:#F6DED8; --night:#1B1840; --night-ink:#ECEAF6;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Noto Serif Devanagari",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Devanagari",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#13112A; --surface:#1C1A38; --ink:#ECEAF6; --muted:#A6A2C4; --line:#2E2B52;
+    --indigo:#B3A8FF; --turmeric:#E0B040; --turmeric-soft:#3A3014; --good:#6FC7B0; --good-soft:#15332D;
+    --bad:#F08A74; --bad-soft:#3A1E19; --night:#0D0B22;
+  }
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 var(--sans);-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--turmeric);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding:16px 16px 110px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.2;margin:0}
+h1{font-size:1.9rem}
+h2{font-size:1.45rem;margin:28px 0 12px}
+h3{font-size:1.15rem;margin:22px 0 8px}
+p{margin:0 0 12px}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.spacer{flex:1}
+
+/* Header */
+.top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.brand{font-family:var(--serif);font-size:1.15rem;font-weight:600}
+.brand small{display:block;font-family:var(--sans);font-size:.78rem;font-weight:400;color:var(--muted)}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;font-size:.9rem}
+
+/* Mandala hero */
+.mandala{background:var(--night);color:var(--night-ink);border-radius:18px;padding:18px 14px 16px}
+.mandala h1{color:#fff;font-size:1.6rem;margin-bottom:4px}
+.mandala .sub{color:#B9B4DC;font-size:.9rem;margin-bottom:14px}
+.grid9{display:grid;grid-template-columns:auto repeat(3,1fr);gap:6px;align-items:stretch}
+.lvl{writing-mode:vertical-rl;transform:rotate(180deg);font-size:.72rem;color:#9C97C8;text-align:center;letter-spacing:.04em}
+.cell{position:relative;overflow:hidden;border:1px solid #3A3570;background:#221F4D;border-radius:4px;min-height:92px;padding:8px;text-align:left;color:#fff;display:flex;flex-direction:column;justify-content:space-between}
+.cell .fill{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(to top,rgba(224,176,64,.55),rgba(224,176,64,.25));transition:height .6s ease}
+.cell span{position:relative;font-family:var(--serif);font-size:.95rem;line-height:1.2}
+.cell b{position:relative;font-weight:500;font-size:.75rem;color:#D8D3F5}
+.cell.locked{opacity:.55}
+.cell.center{border-color:#E0B040}
+.legend{margin-top:12px;font-size:.8rem;color:#B9B4DC}
+
+/* Panels */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:14px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.stat strong{display:block;font-family:var(--serif);font-size:1.5rem}
+.stat span{font-size:.8rem;color:var(--muted)}
+.btn{border:0;background:var(--indigo);color:var(--surface);border-radius:10px;padding:11px 16px;font-weight:600}
+.btn.ghost{background:transparent;color:var(--indigo);border:1px solid var(--line)}
+.btn.warn{background:var(--bad);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.list{list-style:none;margin:0;padding:0}
+.list li{border-top:1px solid var(--line)}
+.list li:first-child{border-top:0}
+.lrow{display:flex;gap:12px;align-items:center;width:100%;background:none;border:0;text-align:left;padding:12px 2px}
+.lnum{font-family:var(--serif);color:var(--muted);min-width:26px}
+.ltitle{flex:1}
+.badge{font-size:.75rem;border-radius:999px;padding:2px 9px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.badge.pass{background:var(--good-soft);color:var(--good);border-color:transparent}
+.badge.try{background:var(--turmeric-soft);color:var(--ink);border-color:transparent}
+
+/* Lesson */
+.crumb{font-size:.85rem;color:var(--muted);margin-bottom:6px}
+.lesson-body{font-family:var(--serif);font-size:1.06rem;line-height:1.7}
+.lesson-body p{margin-bottom:14px}
+.lesson-body .note{border-left:3px solid var(--turmeric);padding:6px 12px;background:var(--turmeric-soft);border-radius:0 8px 8px 0;font-family:var(--sans);font-size:.95rem}
+.tablewrap{overflow-x:auto;margin:12px 0 18px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:.9rem}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{background:var(--paper);font-weight:600}
+tr:last-child td{border-bottom:0}
+.deva{font-family:var(--serif)}
+
+/* Quiz */
+.q{margin-top:18px}
+.q p{font-weight:600}
+.opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;margin:6px 0}
+.opt.right{background:var(--good-soft);border-color:var(--good)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.explain{font-size:.9rem;color:var(--muted);margin-top:6px}
+.result{margin-top:18px;padding:14px;border-radius:12px}
+.result.pass{background:var(--good-soft)}
+.result.fail{background:var(--bad-soft)}
+
+/* Flashcard */
+.card{min-height:220px;display:flex;flex-direction:column;justify-content:center;text-align:center;font-family:var(--serif);font-size:1.3rem;padding:24px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.card .back{font-size:1.05rem;color:var(--muted);margin-top:16px;font-family:var(--sans)}
+.grades{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.grades button{padding:10px 4px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:.9rem}
+
+/* Forms */
+label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 4px}
+input[type=text],input[type=search],select,textarea{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px}
+textarea{min-height:90px;resize:vertical}
+.doubt{border-top:1px solid var(--line);padding:12px 0}
+.doubt:first-child{border-top:0}
+.doubt .meta{font-size:.8rem;color:var(--muted)}
+.tabs{display:flex;gap:6px;margin:10px 0}
+.tabs button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:.88rem}
+.tabs button[aria-pressed=true]{background:var(--indigo);color:var(--surface);border-color:var(--indigo)}
+
+/* Bottom nav */
+nav.bottom{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:10}
+nav.bottom .in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+nav.bottom button{background:none;border:0;padding:10px 0 12px;font-size:.78rem;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
+nav.bottom button .ic{font-size:1.2rem;line-height:1}
+nav.bottom button[aria-current=page]{color:var(--indigo);font-weight:600}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:10px;font-size:.9rem;z-index:20;opacity:0;transition:opacity .2s}
+.toast.show{opacity:1}
+.bar{height:8px;background:var(--line);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--turmeric)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<nav class="bottom" aria-label="Main"><div class="in" id="nav"></div></nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="importFile" accept="application/json" hidden>
+
+<script>
+/* =========================================================
+   REFERENCE DATA (edit freely; lessons and drills read from here)
+   ========================================================= */
+const SIGNS=[
+ {n:'Mesha',d:'मेष',en:'Aries',lord:'Mars',el:'Fire',mo:'Movable (chara)'},
+ {n:'Vrishabha',d:'वृषभ',en:'Taurus',lord:'Venus',el:'Earth',mo:'Fixed (sthira)'},
+ {n:'Mithuna',d:'मिथुन',en:'Gemini',lord:'Mercury',el:'Air',mo:'Dual (dvisvabhava)'},
+ {n:'Karka',d:'कर्क',en:'Cancer',lord:'Moon',el:'Water',mo:'Movable (chara)'},
+ {n:'Simha',d:'सिंह',en:'Leo',lord:'Sun',el:'Fire',mo:'Fixed (sthira)'},
+ {n:'Kanya',d:'कन्या',en:'Virgo',lord:'Mercury',el:'Earth',mo:'Dual (dvisvabhava)'},
+ {n:'Tula',d:'तुला',en:'Libra',lord:'Venus',el:'Air',mo:'Movable (chara)'},
+ {n:'Vrischika',d:'वृश्चिक',en:'Scorpio',lord:'Mars',el:'Water',mo:'Fixed (sthira)'},
+ {n:'Dhanu',d:'धनु',en:'Sagittarius',lord:'Jupiter',el:'Fire',mo:'Dual (dvisvabhava)'},
+ {n:'Makara',d:'मकर',en:'Capricorn',lord:'Saturn',el:'Earth',mo:'Movable (chara)'},
+ {n:'Kumbha',d:'कुम्भ',en:'Aquarius',lord:'Saturn',el:'Air',mo:'Fixed (sthira)'},
+ {n:'Meena',d:'मीन',en:'Pisces',lord:'Jupiter',el:'Water',mo:'Dual (dvisvabhava)'}
+];
+const GRAHAS=[
+ {n:'Sun',s:'Surya',d:'सूर्य',day:'Sunday',ex:'Mesha',exd:10,deb:'Tula',own:'Simha',mt:'Simha',kar:'Soul, father, authority, vitality',yrs:6,asp:'Only the 7th'},
+ {n:'Moon',s:'Chandra',d:'चन्द्र',day:'Monday',ex:'Vrishabha',exd:3,deb:'Vrischika',own:'Karka',mt:'Vrishabha',kar:'Mind, mother, emotions',yrs:10,asp:'Only the 7th'},
+ {n:'Mars',s:'Mangala',d:'मङ्गल',day:'Tuesday',ex:'Makara',exd:28,deb:'Karka',own:'Mesha, Vrischika',mt:'Mesha',kar:'Courage, siblings, land, energy',yrs:7,asp:'4th & 8th'},
+ {n:'Mercury',s:'Budha',d:'बुध',day:'Wednesday',ex:'Kanya',exd:15,deb:'Meena',own:'Mithuna, Kanya',mt:'Kanya',kar:'Intellect, speech, commerce',yrs:17,asp:'Only the 7th'},
+ {n:'Jupiter',s:'Guru',d:'गुरु',day:'Thursday',ex:'Karka',exd:5,deb:'Makara',own:'Dhanu, Meena',mt:'Dhanu',kar:'Wisdom, children, teacher, dharma',yrs:16,asp:'5th & 9th'},
+ {n:'Venus',s:'Shukra',d:'शुक्र',day:'Friday',ex:'Meena',exd:27,deb:'Kanya',own:'Vrishabha, Tula',mt:'Tula',kar:'Spouse, love, arts, comforts',yrs:20,asp:'Only the 7th'},
+ {n:'Saturn',s:'Shani',d:'शनि',day:'Saturday',ex:'Tula',exd:20,deb:'Mesha',own:'Makara, Kumbha',mt:'Kumbha',kar:'Longevity, discipline, sorrow, service',yrs:19,asp:'3rd & 10th'},
+ {n:'Rahu',s:'Rahu',d:'राहु',day:'—',kar:'Obsession, foreign things, the unconventional',yrs:18},
+ {n:'Ketu',s:'Ketu',d:'केतु',day:'—',kar:'Detachment, moksha, past-life skill',yrs:7}
+];
+const DASHA_ORDER=['Ketu','Venus','Sun','Moon','Mars','Rahu','Jupiter','Saturn','Mercury'];
+const NAKS=['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha','Mula','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishta','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati'];
+const nakLord=i=>DASHA_ORDER[i%9];
+const HOUSES=[
+ 'Self, body, personality','Wealth, family, speech','Siblings, courage, short journeys','Mother, home, vehicles, inner happiness',
+ 'Children, intellect, past merit (purva punya)','Enemies, disease, debts, service','Spouse, partnerships, trade','Longevity, sudden events, the hidden',
+ 'Dharma, father, fortune, teachers','Career, action, status (karma)','Gains, income, elder siblings, wishes','Losses, expenses, foreign lands, moksha'
+];
+const PLANET_NAMES=GRAHAS.map(g=>g.n);
+const ord=n=>n+(['th','st','nd','rd'][(n%100>10&&n%100<14)?0:(n%10<4?n%10:0)]||'th');
+const gr=n=>GRAHAS.find(g=>g.n===n);
+
+/* table helpers */
+const tbl=(head,rows)=>`<div class="tablewrap"><table><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+const fmtDeg=deg=>{const d=Math.floor(deg),m=Math.round((deg-d)*60);return `${d}°${m?String(m).padStart(2,'0')+'′':''}`};
+
+/* =========================================================
+   COURSE
+   ========================================================= */
+const LEVELS=['Foundation','Intermediate','Advanced'];
+const MODULES=[
+ {id:'m1',lvl:0,t:'Introduction'},{id:'m2',lvl:0,t:'Rashis'},{id:'m3',lvl:0,t:'Grahas'},
+ {id:'m4',lvl:1,t:'Bhavas'},{id:'m5',lvl:1,t:'Nakshatras'},{id:'m6',lvl:1,t:'Relationships'},
+ {id:'m7',lvl:2,t:'Yogas'},{id:'m8',lvl:2,t:'Timing'},{id:'m9',lvl:2,t:'Vargas'}
+];
+const LESSONS=[
+{id:'intro',m:'m1',t:'What is Jyotisha?',body:()=>`
+<p>Jyotisha, the “science of light”, is one of the six Vedangas: the auxiliary disciplines studied alongside the Vedas. Its original purpose was to fix the correct times for Vedic rituals, which is why astronomy and calculation sit at its root.</p>
+<p>Tradition divides it into three branches (skandhas):</p>
+${tbl(['Branch','Covers'],[['Siddhanta','Astronomy, mathematics, calculating positions'],['Samhita','Mundane matters: nations, weather, omens, muhurta'],['Hora','The individual horoscope (birth chart)']])}
+<p>This course studies Hora in the Parashari tradition. Its foundational text is the <i>Brihat Parashara Hora Shastra</i> (BPHS). Other schools you will meet include Jaimini (sign-based aspects and dashas), Tajika (annual charts) and the 20th-century Krishnamurti Paddhati (KP).</p>
+<p class="note">Study habit: when two books give different rules, write down which school or text each rule comes from. Most “contradictions” are really different systems.</p>`,
+quiz:[
+ {q:'Jyotisha is one of the six…',o:['Vedangas','Upanishads','Puranas','Darshanas'],a:0,x:'The six Vedangas are Shiksha, Chandas, Vyakarana, Nirukta, Kalpa and Jyotisha.'},
+ {q:'Which branch deals with individual birth charts?',o:['Siddhanta','Samhita','Hora','Tajika'],a:2,x:'Hora is natal astrology; Tajika is a separate annual-chart system.'},
+ {q:'The foundational text of the Parashari school is…',o:['Saravali','Brihat Parashara Hora Shastra','Jataka Parijata','Surya Siddhanta'],a:1,x:'Surya Siddhanta is an astronomical (Siddhanta) text.'},
+ {q:'Siddhanta is mainly concerned with…',o:['Omens','Marriage matching','Astronomy and calculation','Annual charts'],a:2,x:'Siddhanta supplies the mathematics the other branches depend on.'}],
+cards:[['Three skandhas of Jyotisha','Siddhanta, Samhita, Hora'],['Meaning of “Jyotisha”','Science of light (jyoti = light)'],['Foundational Parashari text','Brihat Parashara Hora Shastra (BPHS)']]},
+
+{id:'sidereal',m:'m1',t:'Sidereal zodiac and ayanamsha',body:()=>`
+<p>The zodiac is a 360° belt divided into 12 signs of 30° each. Jyotisha uses the <b>sidereal</b> zodiac, measured against the fixed stars. Western astrology mostly uses the <b>tropical</b> zodiac, anchored to the spring equinox.</p>
+<p>Because the Earth’s axis slowly wobbles (precession, roughly 1° every 72 years), the two zodiacs drift apart. The gap between them is the <b>ayanamsha</b>. The Lahiri (Chitrapaksha) ayanamsha, adopted by India’s Calendar Reform Committee in 1955, is now a little over 24°.</p>
+<p>Worked example: a planet at 10° Aries tropical sits at 10° − 24° = −14°, i.e. 346°, which is 16° Pisces sidereal.</p>
+<p>The <b>lagna</b> (ascendant) is the sign rising on the eastern horizon at birth. Since all 12 signs rise in about 24 hours, the lagna changes roughly every two hours, which is why an accurate birth time matters.</p>`,
+quiz:[
+ {q:'How wide is each sign?',o:['27°','30°','13°20′','3°20′'],a:1,x:'360° ÷ 12 = 30°.'},
+ {q:'The ayanamsha is…',o:['The rising sign','The gap between tropical and sidereal zodiacs','A lunar day','A divisional chart'],a:1,x:'It grows slowly each year because of precession.'},
+ {q:'Lahiri ayanamsha today is about…',o:['12°','18°','24°','30°'],a:2,x:'A little over 24°, growing about 50″ per year.'},
+ {q:'The lagna changes roughly every…',o:['2 hours','12 hours','1 day','1 month'],a:0,x:'12 signs rise in about 24 hours.'}],
+cards:[['Ayanamsha','Difference between tropical and sidereal zodiacs (Lahiri ≈ 24°)'],['Lagna','Sign rising on the eastern horizon at birth; changes about every 2 hours'],['Rate of precession','About 1° every 72 years']]},
+
+{id:'panchanga',m:'m1',t:'The Panchanga',body:()=>`
+<p>The Panchanga (“five limbs”) is the Hindu almanac. Every moment has five qualities:</p>
+${tbl(['Limb','What it measures'],[['Tithi','Lunar day: every 12° the Moon gains on the Sun. 30 per lunar month.'],['Vara','Weekday, ruled by a graha'],['Nakshatra','The lunar mansion the Moon occupies (27 of 13°20′)'],['Yoga','Sun + Moon longitudes added, divided into 27 parts'],['Karana','Half a tithi (6°). 11 karanas fill 60 half-tithis.']])}
+<p>These are used heavily in muhurta (electing auspicious times) and are the first things printed on any almanac page.</p>`,
+quiz:[
+ {q:'How many tithis are in a lunar month?',o:['27','28','30','60'],a:2,x:'15 in the bright half (Shukla) and 15 in the dark half (Krishna).'},
+ {q:'A tithi completes when the Moon gains how much on the Sun?',o:['6°','12°','13°20′','30°'],a:1,x:'360° ÷ 30 tithis = 12°.'},
+ {q:'A karana is…',o:['Half a tithi','A weekday','A nakshatra quarter','A divisional chart'],a:0,x:'Each karana spans 6° of Moon–Sun elongation.'},
+ {q:'How many Panchanga yogas are there?',o:['9','12','27','30'],a:2,x:'Same count and span as the nakshatras, but calculated from Sun + Moon.'}],
+cards:[['Five limbs of Panchanga','Tithi, Vara, Nakshatra, Yoga, Karana'],['Tithi','Lunar day; each 12° of Moon–Sun separation'],['Karana','Half a tithi (6°); 11 types']]},
+
+{id:'rashis',m:'m2',t:'The twelve signs and their lords',body:()=>`
+<p>Each sign has a ruling graha (its lord). Only the Sun and Moon rule a single sign; the other five visible planets rule two each. Rahu and Ketu do not own signs in the main Parashari scheme.</p>
+${tbl(['#','Rashi','','English','Lord'],SIGNS.map((s,i)=>[i+1,s.n,`<span class="deva">${s.d}</span>`,s.en,s.lord]))}
+<p class="note">Memory aid: from Karka–Simha (Moon–Sun) the lords go outward in the same order on both sides: Mercury, Venus, Mars, Jupiter, Saturn.</p>`,
+quiz:[
+ {q:'Who rules Dhanu?',o:['Mars','Jupiter','Saturn','Sun'],a:1,x:'Jupiter rules Dhanu and Meena.'},
+ {q:'Who rules Kumbha?',o:['Saturn','Jupiter','Venus','Rahu'],a:0,x:'Saturn rules Makara and Kumbha in Parashari astrology.'},
+ {q:'Which two signs does Mercury rule?',o:['Vrishabha, Tula','Mithuna, Kanya','Mesha, Vrischika','Dhanu, Meena'],a:1,x:'Mithuna and Kanya.'},
+ {q:'The Moon rules…',o:['Karka only','Karka and Simha','Vrishabha','No sign'],a:0,x:'The luminaries each rule one sign: Moon Karka, Sun Simha.'}],
+cards:SIGNS.map(s=>[`Lord of ${s.n} (${s.en})`,s.lord])},
+
+{id:'elements',m:'m2',t:'Elements and modalities',body:()=>`
+<p>Signs repeat a pattern of four elements (tattvas) and three modalities.</p>
+${tbl(['Rashi','Element','Modality'],SIGNS.map(s=>[s.n,s.el,s.mo]))}
+<p>Movable signs start things, fixed signs sustain, dual signs adapt. Odd signs (Mesha, Mithuna…) are masculine and even signs feminine.</p>
+<p class="note">Pattern: elements run Fire → Earth → Air → Water; modalities run Movable → Fixed → Dual. Each repeats around the zodiac.</p>`,
+quiz:[
+ {q:'Vrischika belongs to which element?',o:['Fire','Earth','Air','Water'],a:3,x:'Water signs: Karka, Vrischika, Meena.'},
+ {q:'Which set is all movable (chara)?',o:['Mesha, Karka, Tula, Makara','Vrishabha, Simha, Vrischika, Kumbha','Mithuna, Kanya, Dhanu, Meena','Mesha, Simha, Dhanu'],a:0,x:'The four cardinal points of the zodiac.'},
+ {q:'Kanya’s modality is…',o:['Movable','Fixed','Dual','None'],a:2,x:'Dual signs: Mithuna, Kanya, Dhanu, Meena.'},
+ {q:'Fire signs are…',o:['Mesha, Simha, Dhanu','Karka, Vrischika, Meena','Mithuna, Tula, Kumbha','Vrishabha, Kanya, Makara'],a:0,x:'Signs 1, 5, 9.'}],
+cards:[['Fire signs','Mesha, Simha, Dhanu'],['Earth signs','Vrishabha, Kanya, Makara'],['Air signs','Mithuna, Tula, Kumbha'],['Water signs','Karka, Vrischika, Meena'],['Movable (chara) signs','Mesha, Karka, Tula, Makara']]},
+
+{id:'grahas',m:'m3',t:'The nine grahas',body:()=>`
+<p>“Graha” means “that which grasps”. Jyotisha uses nine: the Sun, Moon, five visible planets, and the two lunar nodes Rahu (north) and Ketu (south). The nodes are mathematical points, always exactly 180° apart, and move backward through the zodiac.</p>
+${tbl(['Graha','','Weekday','Main karakatva (significations)'],GRAHAS.map(g=>[`${g.n} (${g.s})`,`<span class="deva">${g.d}</span>`,g.day,g.kar]))}
+<p>A <b>karaka</b> is a natural significator. When judging mothers, look at the 4th house and at the Moon; for career, the 10th house and planets such as the Sun and Saturn.</p>`,
+quiz:[
+ {q:'Rahu and Ketu are always how far apart?',o:['90°','120°','180°','Varies'],a:2,x:'They are opposite points where the Moon’s path crosses the ecliptic.'},
+ {q:'The natural karaka of the mind is…',o:['Mercury','Moon','Jupiter','Sun'],a:1,x:'Chandra governs manas (mind).'},
+ {q:'Wisdom, children and the teacher are signified by…',o:['Venus','Saturn','Jupiter','Mars'],a:2,x:'Guru is the teacher.'},
+ {q:'Saturn rules which weekday?',o:['Tuesday','Thursday','Friday','Saturday'],a:3,x:'Shanivara.'}],
+cards:GRAHAS.slice(0,7).map(g=>[`Karaka: ${g.n}`,g.kar]).concat([['Rahu & Ketu','Lunar nodes, always 180° apart, move retrograde']])},
+
+{id:'dignity',m:'m3',t:'Dignity: exaltation, debilitation, own sign',body:()=>`
+<p>A graha’s strength depends heavily on which sign it occupies. Each has a sign of exaltation (uchcha), with a point of deepest exaltation, and debilitation (neecha) exactly opposite.</p>
+${tbl(['Graha','Exalted','Deep point','Debilitated','Own sign(s)','Moolatrikona'],GRAHAS.slice(0,7).map(g=>[g.n,g.ex,fmtDeg(g.exd),g.deb,g.own,g.mt]))}
+<p><b>Natural benefics:</b> Jupiter, Venus, a waxing Moon, and Mercury when not joined by malefics. <b>Natural malefics:</b> Sun, Mars, Saturn, Rahu, Ketu, and a waning Moon.</p>
+<p class="note">Rahu’s and Ketu’s exaltation signs differ between texts (Vrishabha/Vrischika or Mithuna/Dhanu). Note which one your teacher follows.</p>`,
+quiz:[
+ {q:'The Sun is exalted in…',o:['Simha','Mesha','Dhanu','Tula'],a:1,x:'Deepest at 10° Mesha; debilitated in Tula.'},
+ {q:'Saturn is debilitated in…',o:['Mesha','Karka','Tula','Makara'],a:0,x:'Opposite its exaltation sign, Tula.'},
+ {q:'Jupiter is exalted in…',o:['Dhanu','Meena','Karka','Makara'],a:2,x:'Deepest at 5° Karka.'},
+ {q:'Venus reaches deepest exaltation at…',o:['27° Meena','15° Kanya','20° Tula','3° Vrishabha'],a:0,x:'Venus is debilitated in Kanya.'},
+ {q:'Mars is debilitated in…',o:['Karka','Kanya','Makara','Mesha'],a:0,x:'Mars is exalted in Makara, so debilitated in the opposite sign, Karka.'}],
+cards:GRAHAS.slice(0,7).map(g=>[`${g.n}: exaltation & debilitation`,`Exalted in ${g.ex} (${g.exd}°), debilitated in ${g.deb}`])},
+
+{id:'bhavas',m:'m4',t:'The twelve houses',body:()=>`
+<p>Houses (bhavas) divide life into areas of experience. Much Parashari practice uses whole-sign houses: the lagna sign is the 1st house, the next sign the 2nd, and so on.</p>
+${tbl(['House','Main significations'],HOUSES.map((h,i)=>[ord(i+1),h]))}
+<p>A house is judged by three things together: its lord, planets placed in it, and its karaka. For example, the 7th house, its lord, and Venus are read together for marriage.</p>`,
+quiz:[
+ {q:'Career and action belong to the…',o:['6th','9th','10th','11th'],a:2,x:'The 10th is the karma bhava.'},
+ {q:'The spouse is seen from the…',o:['5th','7th','8th','12th'],a:1,x:'The 7th house of partnership.'},
+ {q:'Mother and home belong to the…',o:['2nd','4th','9th','11th'],a:1,x:'The 4th, whose karaka is the Moon.'},
+ {q:'Dharma, father and fortune belong to the…',o:['9th','3rd','5th','1st'],a:0,x:'The 9th is the bhagya bhava.'},
+ {q:'Losses, expenses and moksha belong to the…',o:['6th','8th','11th','12th'],a:3,x:'The 12th, or vyaya bhava.'}],
+cards:HOUSES.map((h,i)=>[`${ord(i+1)} house`,h])},
+
+{id:'housegroups',m:'m4',t:'House groupings',body:()=>`
+${tbl(['Group','Houses','Nature'],[['Kendra (angles)','1, 4, 7, 10','Pillars of the chart; strength and stability'],['Trikona (trines)','1, 5, 9','Fortune, merit, dharma: the most auspicious'],['Dusthana','6, 8, 12','Difficulty, obstacles, loss'],['Upachaya','3, 6, 10, 11','Houses of growth; malefics often do well here'],['Maraka','2, 7','“Killer” houses, used in longevity timing'],['Panaphara','2, 5, 8, 11','Succeedent houses'],['Apoklima','3, 6, 9, 12','Cadent houses']])}
+<p>The 1st house is both a kendra and a trikona, which is why the lagna lord is always important.</p>`,
+quiz:[
+ {q:'The trikona houses are…',o:['1, 4, 7, 10','1, 5, 9','6, 8, 12','3, 6, 10, 11'],a:1,x:'Trines from the lagna.'},
+ {q:'The dusthanas are…',o:['2, 7','3, 6, 10, 11','6, 8, 12','4, 8, 12'],a:2,x:'Houses of difficulty.'},
+ {q:'Which houses are upachayas?',o:['3, 6, 10, 11','1, 5, 9','2, 5, 8, 11','4, 7, 10'],a:0,x:'Results improve over time here.'},
+ {q:'Which house is both kendra and trikona?',o:['1st','4th','5th','9th'],a:0,x:'The lagna.'}],
+cards:[['Kendras','1, 4, 7, 10'],['Trikonas','1, 5, 9'],['Dusthanas','6, 8, 12'],['Upachayas','3, 6, 10, 11'],['Marakas','2, 7']]},
+
+{id:'nakshatras',m:'m5',t:'The 27 nakshatras',body:()=>{
+ const rows=NAKS.map((n,i)=>{const st=i*40/3;const sg=SIGNS[Math.floor(st/30)].n;return [i+1,n,`${fmtDeg(st%30)} ${sg}`,nakLord(i)]});
+ return `<p>The zodiac is also divided into 27 lunar mansions of 13°20′ each (27 × 13°20′ = 360°). Each nakshatra has four quarters (padas) of 3°20′, giving 108 padas in all, nine per sign.</p>
+${tbl(['#','Nakshatra','Starts at','Lord'],rows)}
+<p>The Moon’s nakshatra at birth (the janma nakshatra) is central to timing, compatibility and naming customs. Some texts add a 28th, Abhijit, used mainly in muhurta.</p>`},
+quiz:[
+ {q:'Each nakshatra spans…',o:['12°','13°20′','30°','3°20′'],a:1,x:'360° ÷ 27.'},
+ {q:'How many padas are there in total?',o:['27','54','108','120'],a:2,x:'27 × 4 = 108.'},
+ {q:'Each pada spans…',o:['3°20′','6°40′','2°30′','1°'],a:0,x:'13°20′ ÷ 4.'},
+ {q:'The first and last nakshatras are…',o:['Ashwini and Revati','Krittika and Bharani','Mula and Revati','Ashwini and Mula'],a:0,x:'Revati ends at 30° Meena; Ashwini begins at 0° Mesha.'}],
+cards:[['Nakshatra span','13°20′ (four padas of 3°20′)'],['Total padas','108 (nine per sign)'],['First nakshatra','Ashwini, starting 0° Mesha']]},
+
+{id:'naklords',m:'m5',t:'Nakshatra lords',body:()=>`
+<p>Nakshatra lords follow a fixed sequence of nine that repeats three times:</p>
+<p style="font-family:var(--sans);font-weight:600">${DASHA_ORDER.join(' → ')}</p>
+${tbl(['Lord','Nakshatras'],DASHA_ORDER.map((l,i)=>[l,[NAKS[i],NAKS[i+9],NAKS[i+18]].join(', ')]))}
+<p>This sequence is the backbone of the Vimshottari dasha system: the lord of the Moon’s birth nakshatra decides which dasha a person is born in.</p>
+<p class="note">Memorize the column, not the table: Ashwini, Magha and Mula are all Ketu; Bharani, Purva Phalguni and Purva Ashadha are all Venus, and so on.</p>`,
+quiz:[
+ {q:'Lord of Rohini?',o:['Venus','Moon','Mars','Sun'],a:1,x:'Rohini is the 4th nakshatra; the 4th in the sequence is the Moon.'},
+ {q:'Lord of Pushya?',o:['Jupiter','Saturn','Mercury','Moon'],a:1,x:'8th nakshatra, 8th lord: Saturn.'},
+ {q:'Lord of Magha?',o:['Sun','Ketu','Venus','Rahu'],a:1,x:'Magha restarts the cycle at Ketu.'},
+ {q:'Lord of Swati?',o:['Rahu','Mars','Jupiter','Venus'],a:0,x:'15th nakshatra: 15 − 9 = 6th lord, Rahu.'}],
+cards:DASHA_ORDER.map((l,i)=>[`Nakshatras ruled by ${l}`,[NAKS[i],NAKS[i+9],NAKS[i+18]].join(', ')])},
+
+{id:'friendship',m:'m6',t:'Planetary friendships',body:()=>`
+<p>Parashara gives each graha natural (naisargika) friends, neutrals and enemies:</p>
+${tbl(['Graha','Friends','Neutral','Enemies'],[
+ ['Sun','Moon, Mars, Jupiter','Mercury','Venus, Saturn'],
+ ['Moon','Sun, Mercury','Mars, Jupiter, Venus, Saturn','None'],
+ ['Mars','Sun, Moon, Jupiter','Venus, Saturn','Mercury'],
+ ['Mercury','Sun, Venus','Mars, Jupiter, Saturn','Moon'],
+ ['Jupiter','Sun, Moon, Mars','Saturn','Mercury, Venus'],
+ ['Venus','Mercury, Saturn','Mars, Jupiter','Sun, Moon'],
+ ['Saturn','Mercury, Venus','Jupiter','Sun, Moon, Mars']])}
+<p>In a specific chart there is also <b>temporary (tatkalika)</b> friendship: planets in the 2nd, 3rd, 4th, 10th, 11th and 12th from a graha are its temporary friends; the rest are temporary enemies. Combining both gives the five-fold (panchadha) relationship: great friend, friend, neutral, enemy, great enemy.</p>`,
+quiz:[
+ {q:'The Sun’s natural enemies are…',o:['Venus, Saturn','Moon, Mars','Mercury, Jupiter','Rahu, Ketu'],a:0,x:''},
+ {q:'Which graha has no natural enemies?',o:['Jupiter','Moon','Mercury','Sun'],a:1,x:'The Moon treats all as friends or neutrals.'},
+ {q:'Mercury’s natural enemy is…',o:['Sun','Venus','Moon','Saturn'],a:2,x:'Even though the Moon holds no enmity back.'},
+ {q:'Temporary friends occupy which houses from a graha?',o:['2, 3, 4, 10, 11, 12','1, 5, 9','4, 7, 10','6, 8, 12'],a:0,x:''}],
+cards:[['Sun: friends / enemies','Friends Moon, Mars, Jupiter; enemies Venus, Saturn'],['Saturn: friends / enemies','Friends Mercury, Venus; enemies Sun, Moon, Mars'],['Temporary friend houses','2, 3, 4, 10, 11, 12 from the graha']]},
+
+{id:'drishti',m:'m6',t:'Graha drishti (aspects)',body:()=>`
+<p>Every graha fully aspects the 7th house from itself. Three have extra special aspects:</p>
+${tbl(['Graha','Special aspects (plus the 7th)'],[['Mars','4th and 8th'],['Jupiter','5th and 9th'],['Saturn','3rd and 10th']])}
+<p>Count inclusively: the house the graha occupies is the 1st. Mars in Mesha therefore aspects Karka (4th), Tula (7th) and Vrischika (8th).</p>
+<p class="note">Rahu and Ketu are given 5th and 9th aspects by many, but not all, astrologers. Jaimini uses a completely different sign-to-sign aspect system (rashi drishti).</p>`,
+quiz:[
+ {q:'Jupiter’s special aspects are…',o:['3rd & 10th','4th & 8th','5th & 9th','6th & 12th'],a:2,x:''},
+ {q:'Saturn’s special aspects are…',o:['3rd & 10th','4th & 8th','5th & 9th','2nd & 12th'],a:0,x:''},
+ {q:'Mars in Mesha aspects which sign by its 4th aspect?',o:['Mithuna','Karka','Simha','Makara'],a:1,x:'Mesha 1, Vrishabha 2, Mithuna 3, Karka 4.'},
+ {q:'Which aspect do all grahas share?',o:['5th','7th','9th','10th'],a:1,x:''}],
+cards:[['Mars special aspects','4th and 8th'],['Jupiter special aspects','5th and 9th'],['Saturn special aspects','3rd and 10th']]},
+
+{id:'mahapurusha',m:'m7',t:'Pancha Mahapurusha and Gajakesari',body:()=>`
+<p>A Pancha Mahapurusha yoga forms when Mars, Mercury, Jupiter, Venus or Saturn sits in its own or exaltation sign <i>and</i> in a kendra from the lagna.</p>
+${tbl(['Yoga','Graha'],[['Ruchaka','Mars'],['Bhadra','Mercury'],['Hamsa','Jupiter'],['Malavya','Venus'],['Shasha','Saturn']])}
+<p><b>Gajakesari yoga:</b> Jupiter in a kendra (1, 4, 7, 10) from the Moon. It is common, so judge its strength by the dignity of both Moon and Jupiter.</p>
+<p><b>Budhaditya yoga:</b> Sun and Mercury together. Since Mercury is never more than about 28° from the Sun, this too is very common.</p>
+<p class="note">Exercise habit: for every yoga you find in a chart, also note what weakens it (combustion, debilitation, dusthana lordship).</p>`,
+quiz:[
+ {q:'Hamsa yoga is formed by…',o:['Venus','Jupiter','Mercury','Saturn'],a:1,x:''},
+ {q:'Shasha yoga is formed by…',o:['Mars','Saturn','Moon','Sun'],a:1,x:''},
+ {q:'Malavya yoga is formed by…',o:['Venus','Mercury','Mars','Jupiter'],a:0,x:''},
+ {q:'Gajakesari requires Jupiter in a kendra from…',o:['The Sun','The lagna lord','The Moon','Venus'],a:2,x:''}],
+cards:[['Ruchaka yoga','Mars in own/exaltation sign in a kendra'],['Bhadra yoga','Mercury in own/exaltation sign in a kendra'],['Hamsa yoga','Jupiter in own/exaltation sign in a kendra'],['Malavya yoga','Venus in own/exaltation sign in a kendra'],['Shasha yoga','Saturn in own/exaltation sign in a kendra'],['Gajakesari','Jupiter in a kendra from the Moon']]},
+
+{id:'rajayoga',m:'m7',t:'Raja, Dhana and Viparita yogas',body:()=>`
+<p><b>Raja yoga</b> arises when a kendra lord and a trikona lord are connected by conjunction, mutual aspect or exchange of signs (parivartana).</p>
+<p>A <b>yogakaraka</b> is a single graha that rules both a kendra and a trikona:</p>
+${tbl(['Lagna','Yogakaraka','Houses ruled'],[['Vrishabha','Saturn','9 & 10'],['Tula','Saturn','4 & 5'],['Karka','Mars','5 & 10'],['Simha','Mars','4 & 9'],['Makara','Venus','5 & 10'],['Kumbha','Venus','4 & 9']])}
+<p><b>Dhana yogas</b> link the wealth houses: lords of 2 and 11 with lords of 5 and 9.</p>
+<p><b>Viparita Raja yoga</b> forms when lords of dusthanas occupy dusthanas: Harsha (6th lord), Sarala (8th lord), Vimala (12th lord). Difficulty cancels difficulty.</p>
+<p><b>Kemadruma</b>, a yoga of hardship, forms when no planet (excluding Sun, Rahu, Ketu) occupies the 2nd or 12th from the Moon. Many cancellations exist.</p>`,
+quiz:[
+ {q:'The yogakaraka for Tula lagna is…',o:['Venus','Saturn','Mars','Jupiter'],a:1,x:'Saturn rules the 4th (Makara) and 5th (Kumbha).'},
+ {q:'Viparita Raja yoga involves the lords of…',o:['Kendras','Trikonas','Dusthanas','Upachayas'],a:2,x:''},
+ {q:'Harsha yoga involves the lord of the…',o:['6th','8th','12th','10th'],a:0,x:''},
+ {q:'Kemadruma yoga concerns planets on either side of…',o:['The lagna','The Sun','The Moon','Jupiter'],a:2,x:''}],
+cards:[['Yogakaraka','One graha ruling both a kendra and a trikona'],['Viparita Raja yogas','Harsha (6th lord), Sarala (8th), Vimala (12th) in dusthanas'],['Kemadruma','No planets (except Sun, Rahu, Ketu) in 2nd or 12th from Moon']]},
+
+{id:'dasha',m:'m8',t:'Vimshottari dasha',body:()=>`
+<p>Vimshottari (“of 120”) is the most used Parashari timing system. Life is divided into nine major periods (mahadashas) totalling 120 years, running in the nakshatra-lord order.</p>
+${tbl(['Order','Graha','Years'],DASHA_ORDER.map((g,i)=>[i+1,g,gr(g).yrs]))}
+<p><b>Starting dasha:</b> the lord of the Moon’s birth nakshatra. <b>Balance:</b> the fraction of that nakshatra still untravelled, times the lord’s years.</p>
+<p>Worked example: Rohini (Moon’s nakshatra) spans 10°00′ to 23°20′ Vrishabha. With the Moon at 16°40′ Vrishabha, it has covered 6°40′ of 13°20′: exactly half. The balance is half of 10 years, so the person is born with 5 years of Moon dasha left, followed by Mars (7), Rahu (18) and so on.</p>
+<p><b>Sub-periods (antardashas):</b> mahadasha years × antardasha years ÷ 120. Venus–Venus = 20 × 20 ÷ 120 = 3⅓ years (3 years 4 months).</p>
+<p class="note">Other dasha systems include Yogini (36-year cycle), Ashtottari (108 years) and Jaimini’s Chara dasha.</p>`,
+quiz:[
+ {q:'Total length of the Vimshottari cycle?',o:['108 years','120 years','100 years','36 years'],a:1,x:''},
+ {q:'Venus mahadasha lasts…',o:['16 years','19 years','20 years','18 years'],a:2,x:'The longest period.'},
+ {q:'Which dasha follows the Moon’s?',o:['Sun','Mars','Rahu','Mercury'],a:1,x:''},
+ {q:'Saturn mahadasha lasts…',o:['17 years','18 years','19 years','20 years'],a:2,x:''},
+ {q:'Sun–Sun antardasha lasts…',o:['6 months','3.6 months (0.3 yr)','1 year','3 years'],a:1,x:'6 × 6 ÷ 120 = 0.3 year ≈ 3 months 18 days.'}],
+cards:DASHA_ORDER.map(g=>[`Vimshottari years: ${g}`,`${gr(g).yrs} years`]).concat([['Antardasha formula','MD years × AD years ÷ 120']])},
+
+{id:'gochara',m:'m8',t:'Gochara (transits)',body:()=>`
+<p>Transits are usually judged from the natal Moon sign (Chandra lagna) as well as from the lagna.</p>
+${tbl(['Graha','Approx. time in one sign'],[['Moon','About 2¼ days'],['Sun','About 1 month'],['Mercury, Venus','About 3–4 weeks (varies)'],['Mars','About 45 days (longer when retrograde)'],['Jupiter','About 1 year'],['Rahu / Ketu','About 18 months, moving backward'],['Saturn','About 2½ years']])}
+<p><b>Sade Sati:</b> Saturn transiting the 12th, 1st and 2nd signs from the natal Moon, roughly 7½ years. <b>Ashtama Shani:</b> Saturn in the 8th from the Moon.</p>
+<p>Jupiter is traditionally favourable in transit through the 2nd, 5th, 7th, 9th and 11th from the Moon. Classical texts also apply <i>vedha</i> (obstruction points) that can cancel a transit’s result.</p>
+<p class="note">Transits deliver results mainly when the running dasha also promises them. Read dasha first, transit second.</p>`,
+quiz:[
+ {q:'Saturn spends about how long in one sign?',o:['1 year','18 months','2½ years','7½ years'],a:2,x:''},
+ {q:'Sade Sati is Saturn transiting which houses from the Moon?',o:['12, 1, 2','1, 4, 7','6, 8, 12','4, 8, 12'],a:0,x:''},
+ {q:'Jupiter spends about how long in one sign?',o:['1 month','1 year','2½ years','18 months'],a:1,x:''},
+ {q:'Rahu and Ketu move through the signs…',o:['Forward, ~1 year','Backward, ~18 months','Forward, ~2½ years','They stay fixed'],a:1,x:''}],
+cards:[['Sade Sati','Saturn in 12th, 1st, 2nd from natal Moon (~7½ years)'],['Jupiter transit, good houses from Moon','2, 5, 7, 9, 11'],['Saturn per sign','About 2½ years']]},
+
+{id:'vargas',m:'m9',t:'Divisional charts (vargas)',body:()=>`
+<p>Each sign can be divided into smaller parts, producing divisional charts that magnify one area of life. Parashara lists sixteen (shodashavarga).</p>
+${tbl(['Chart','Name','Used for'],[['D1','Rashi','The whole life; the main chart'],['D2','Hora','Wealth'],['D3','Drekkana','Siblings, courage'],['D4','Chaturthamsha','Property, fortune, home'],['D7','Saptamsha','Children'],['D9','Navamsha','Marriage, dharma, inner strength of grahas'],['D10','Dashamsha','Career'],['D12','Dwadashamsha','Parents'],['D16','Shodashamsha','Vehicles, comforts'],['D20','Vimshamsha','Spiritual practice'],['D24','Chaturvimshamsha','Education'],['D30','Trimshamsha','Misfortunes'],['D60','Shashtiamsha','Past karma; very birth-time sensitive']])}
+<p><b>Navamsha (D9):</b> each sign split into nine parts of 3°20′, exactly one nakshatra pada each. Counting starts from Mesha for fire signs, Makara for earth, Tula for air and Karka for water.</p>
+<p>A graha in the same sign in D1 and D9 is <b>vargottama</b> and considered strengthened.</p>`,
+quiz:[
+ {q:'D9 is called…',o:['Hora','Navamsha','Dashamsha','Drekkana'],a:1,x:''},
+ {q:'Career is studied in…',o:['D7','D9','D10','D12'],a:2,x:''},
+ {q:'Vargottama means a graha is…',o:['Exalted in D1','In the same sign in D1 and D9','Retrograde','In a kendra in D10'],a:1,x:''},
+ {q:'Navamsha counting for a fire sign begins from…',o:['Mesha','Makara','Tula','Karka'],a:0,x:''}],
+cards:[['D9 Navamsha','Marriage, dharma, strength; 9 parts of 3°20′'],['D10 Dashamsha','Career'],['Vargottama','Same sign in D1 and D9'],['Navamsha start signs','Fire→Mesha, Earth→Makara, Air→Tula, Water→Karka']]}
+];
+
+const GLOSSARY=[
+ ['Lagna','लग्न','Ascendant; sign rising in the east at birth'],['Rashi','राशि','Zodiac sign (30°)'],['Graha','ग्रह','Planet; literally “that which grasps”'],
+ ['Bhava','भाव','House of the chart'],['Nakshatra','नक्षत्र','Lunar mansion of 13°20′'],['Pada','पाद','Quarter of a nakshatra, 3°20′'],
+ ['Ayanamsha','अयनांश','Gap between tropical and sidereal zodiacs'],['Uchcha','उच्च','Exaltation'],['Neecha','नीच','Debilitation'],
+ ['Moolatrikona','मूलत्रिकोण','A graha’s office sign, strong after exaltation'],['Swakshetra','स्वक्षेत्र','Own sign'],['Karaka','कारक','Natural significator'],
+ ['Drishti','दृष्टि','Aspect (glance) of a graha'],['Kendra','केन्द्र','Angular houses 1, 4, 7, 10'],['Trikona','त्रिकोण','Trines 1, 5, 9'],
+ ['Dusthana','दुःस्थान','Difficult houses 6, 8, 12'],['Upachaya','उपचय','Houses of growth 3, 6, 10, 11'],['Dasha','दशा','Planetary period'],
+ ['Antardasha','अन्तर्दशा','Sub-period within a dasha'],['Gochara','गोचर','Transit'],['Vargottama','वर्गोत्तम','Same sign in D1 and D9'],
+ ['Yogakaraka','योगकारक','Graha ruling both a kendra and a trikona'],['Parivartana','परिवर्तन','Mutual exchange of signs'],['Tithi','तिथि','Lunar day'],
+ ['Muhurta','मुहूर्त','Electional astrology; choosing good times'],['Vakri','वक्री','Retrograde'],['Asta','अस्त','Combust; too close to the Sun']
+];
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const KEY='pathshala-v1';
+let memoryOnly=false;
+const blank=()=>({lessons:{},cards:{},doubts:[],drills:{},days:[],unlockAll:false});
+let S=blank();
+try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(blank(),JSON.parse(raw))}catch(e){memoryOnly=true}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){memoryOnly=true}}
+const today=()=>new Date().toISOString().slice(0,10);
+function touchDay(){const d=today();if(!S.days.includes(d)){S.days.push(d);save()}}
+function streak(){const set=new Set(S.days);let n=0;let d=new Date();if(!set.has(today())){d.setDate(d.getDate()-1)}
+ while(set.has(d.toISOString().slice(0,10))){n++;d.setDate(d.getDate()-1)}return n}
+
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const rand=a=>a[Math.floor(Math.random()*a.length)];
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),2200)}
+
+const passed=id=>!!(S.lessons[id]&&S.lessons[id].passed);
+const idx=id=>LESSONS.findIndex(l=>l.id===id);
+const unlocked=i=>S.unlockAll||i===0||passed(LESSONS[i-1].id);
+function modProgress(mid){const ls=LESSONS.filter(l=>l.m===mid);return ls.filter(l=>passed(l.id)).length/ls.length}
+function cardId(lid,i){return lid+':'+i}
+function addCards(lesson){lesson.cards.forEach((c,i)=>{const id=cardId(lesson.id,i);if(!S.cards[id])S.cards[id]={i:0,e:2.5,due:Date.now()}});save()}
+function dueCards(){const now=Date.now();return Object.keys(S.cards).filter(k=>S.cards[k].due<=now)}
+function cardContent(id){const [lid,i]=id.split(':');const l=LESSONS.find(x=>x.id===lid);return l?{f:l.cards[+i][0],b:l.cards[+i][1],l}:null}
+
+/* =========================================================
+   ROUTER
+   ========================================================= */
+let view={name:'home'};
+const NAV=[['home','Home','🏠'],['course','Course','📜'],['drills','Drills','🎯'],['cards','Cards','🗂️'],['doubts','Doubts','❓']];
+function go(name,arg){view={name,arg};render();window.scrollTo(0,0)}
+function render(){
+ const tab=view.name==='lesson'?'course':(['glossary','progress'].includes(view.name)?'home':view.name);
+ document.getElementById('nav').innerHTML=NAV.map(([k,t,ic])=>`<button data-go="${k}" ${tab===k?'aria-current="page"':''}><span class="ic" aria-hidden="true">${ic}</span>${t}${k==='cards'&&dueCards().length?` (${dueCards().length})`:''}</button>`).join('');
+ const app=document.getElementById('app');
+ app.innerHTML=({home:vHome,course:vCourse,lesson:vLesson,drills:vDrills,cards:vCards,doubts:vDoubts,glossary:vGlossary,progress:vProgress})[view.name]();
+ bindAfter&&bindAfter();bindAfter=null;
+}
+let bindAfter=null;
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b){go(b.dataset.go,b.dataset.arg)}});
+
+/* =========================================================
+   VIEWS
+   ========================================================= */
+function header(){return `<div class="top"><div class="brand">Grahakosha Pathshala<small>A course in Parashari Jyotisha</small></div><span class="spacer"></span><button class="iconbtn" data-go="glossary">Glossary</button><button class="iconbtn" data-go="progress">Progress</button></div>`}
+
+function nextLesson(){for(let i=0;i<LESSONS.length;i++){if(!passed(LESSONS[i].id)&&unlocked(i))return LESSONS[i]}return null}
+
+function vHome(){
+ const done=LESSONS.filter(l=>passed(l.id)).length;
+ const nx=nextLesson();
+ const cells=[0,1,2].map(lv=>`<div class="lvl">${LEVELS[lv]}</div>`+MODULES.filter(m=>m.lvl===lv).map(m=>{
+   const p=modProgress(m.id);const first=idx(LESSONS.find(l=>l.m===m.id).id);const lk=!unlocked(first);
+   return `<button class="cell ${lk?'locked':''} ${m.id==='m5'?'center':''}" data-go="course" data-arg="${m.id}" aria-label="${m.t}, ${Math.round(p*100)}% complete${lk?', locked':''}"><div class="fill" style="height:${p*100}%"></div><span>${m.t}</span><b>${lk?'Locked':Math.round(p*100)+'%'}</b></button>`}).join('')).join('');
+ return header()+`
+ <section class="mandala">
+  <h1>${done===LESSONS.length?'Course complete':'Your course map'}</h1>
+  <div class="sub">${done} of ${LESSONS.length} lessons passed. Each square fills as you pass its lessons.</div>
+  <div class="grid9">${cells}</div>
+  <div class="legend">Rows run from Foundation (top) to Advanced (bottom).</div>
+ </section>
+ <div class="stats">
+  <div class="stat"><strong>${streak()}</strong><span>day streak</span></div>
+  <div class="stat"><strong>${dueCards().length}</strong><span>cards due</span></div>
+  <div class="stat"><strong>${S.doubts.filter(d=>d.status==='open').length}</strong><span>open doubts</span></div>
+ </div>
+ ${nx?`<div class="panel"><div class="muted small">Up next</div><h3 style="margin-top:4px">${nx.t}</h3><p class="muted small">${MODULES.find(m=>m.id===nx.m).t}</p><button class="btn" data-go="lesson" data-arg="${nx.id}">Start lesson</button></div>`:''}
+ ${dueCards().length?`<div class="panel row"><div>You have ${dueCards().length} flashcards to review.</div><span class="spacer"></span><button class="btn ghost" data-go="cards">Review cards</button></div>`:''}
+ ${memoryOnly?`<div class="panel small">This browser is blocking storage, so progress will be lost when you close the page. Use Progress → Export backup to keep it.</div>`:''}`;
+}
+
+function vCourse(){
+ const focus=view.arg;
+ bindAfter=()=>{if(focus){const el=document.getElementById(focus);el&&el.scrollIntoView({block:'start'})}};
+ return header()+`<h1>Course</h1><p class="muted">Pass each lesson’s quiz (60% or more) to unlock the next.</p>`+
+ LEVELS.map((lv,li)=>`<h2>${lv}</h2>`+MODULES.filter(m=>m.lvl===li).map(m=>`<div class="panel" id="${m.id}"><div class="row"><h3 style="margin:0">${m.t}</h3><span class="spacer"></span><span class="small muted">${Math.round(modProgress(m.id)*100)}%</span></div>
+ <ul class="list" style="margin-top:6px">${LESSONS.filter(l=>l.m===m.id).map(l=>{const i=idx(l.id);const u=unlocked(i);const r=S.lessons[l.id];
+  const badge=passed(l.id)?`<span class="badge pass">Passed ${r.best}%</span>`:r?`<span class="badge try">Best ${r.best}%</span>`:u?`<span class="badge">New</span>`:`<span class="badge">Locked</span>`;
+  return `<li><button class="lrow" ${u?`data-go="lesson" data-arg="${l.id}"`:'disabled aria-disabled="true"'} style="${u?'':'opacity:.5'}"><span class="lnum">${i+1}</span><span class="ltitle">${l.t}</span>${badge}</button></li>`}).join('')}</ul></div>`).join('')).join('');
+}
+
+let quiz=null;
+function vLesson(){
+ const l=LESSONS.find(x=>x.id===view.arg);const i=idx(l.id);
+ if(!unlocked(i))return header()+`<p>This lesson unlocks after you pass “${LESSONS[i-1].t}”.</p><button class="btn" data-go="lesson" data-arg="${LESSONS[i-1].id}">Go to that lesson</button>`;
+ touchDay();addCards(l);
+ if(!quiz||quiz.id!==l.id)quiz={id:l.id,ans:new Array(l.quiz.length).fill(null),done:false};
+ const m=MODULES.find(x=>x.id===l.m);const nxt=LESSONS[i+1];
+ bindAfter=()=>{
+  document.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{
+   const qi=+b.dataset.q,oi=+b.dataset.o;if(quiz.ans[qi]!==null)return;quiz.ans[qi]=oi;
+   if(quiz.ans.every(a=>a!==null)){const sc=Math.round(100*quiz.ans.filter((a,k)=>a===l.quiz[k].a).length/l.quiz.length);
+    const prev=S.lessons[l.id]||{best:0,passed:false};S.lessons[l.id]={best:Math.max(prev.best,sc),passed:prev.passed||sc>=60,last:sc,date:today()};quiz.done=true;quiz.score=sc;save()}
+   const y=window.scrollY;render();window.scrollTo(0,y)}));
+  const rb=document.getElementById('retry');rb&&rb.addEventListener('click',()=>{quiz=null;render();document.getElementById('quiz').scrollIntoView()});
+  const ab=document.getElementById('askDoubt');ab&&ab.addEventListener('click',()=>{doubtDraftLesson=l.id;go('doubts')});
+ };
+ return `<div class="crumb">${LEVELS[m.lvl]} › ${m.t} › Lesson ${i+1}</div><h1>${l.t}</h1>
+ <div class="lesson-body" style="margin-top:16px">${l.body()}</div>
+ <p class="small muted">${l.cards.length} flashcards from this lesson are now in your deck.</p>
+ <button class="btn ghost" id="askDoubt">Ask a doubt about this lesson</button>
+ <h2 id="quiz">Check your understanding</h2>
+ ${l.quiz.map((q,qi)=>`<div class="q"><p>${qi+1}. ${q.q}</p>${q.o.map((o,oi)=>{const a=quiz.ans[qi];let c='';if(a!==null){if(oi===q.a)c='right';else if(oi===a)c='wrong'}
+   return `<button class="opt ${c}" data-q="${qi}" data-o="${oi}" ${a!==null?'aria-disabled="true"':''}>${o}</button>`}).join('')}
+   ${quiz.ans[qi]!==null&&q.x?`<div class="explain">${q.x}</div>`:''}</div>`).join('')}
+ ${quiz.done?`<div class="result ${quiz.score>=60?'pass':'fail'}"><b>You scored ${quiz.score}%.</b> ${quiz.score>=60?(nxt?'The next lesson is unlocked.':'You have finished the course.'):'Reread the lesson and try again; you need 60% to unlock the next one.'}
+   <div class="row" style="margin-top:10px"><button class="btn ghost" id="retry">Retake quiz</button>${quiz.score>=60&&nxt?`<button class="btn" data-go="lesson" data-arg="${nxt.id}">Next lesson</button>`:''}</div></div>`:''}`;
+}
+
+/* ---------- Drills ---------- */
+const DRILLS={
+ signLord:{t:'Sign lords',gen(){const s=rand(SIGNS);return mk(`Who rules ${s.n} (${s.en})?`,s.lord,PLANET_NAMES.slice(0,7))}},
+ dignity:{t:'Exaltation & debilitation',gen(){const g=rand(GRAHAS.slice(0,7));const ex=Math.random()<.5;return mk(`Where is ${g.n} ${ex?'exalted':'debilitated'}?`,ex?g.ex:g.deb,SIGNS.map(s=>s.n))}},
+ element:{t:'Elements',gen(){const s=rand(SIGNS);return mk(`Which element is ${s.n}?`,s.el,['Fire','Earth','Air','Water'])}},
+ nakLord:{t:'Nakshatra lords',gen(){const i=Math.floor(Math.random()*27);return mk(`Who rules ${NAKS[i]}?`,nakLord(i),PLANET_NAMES)}},
+ dasha:{t:'Dasha years',gen(){const g=rand(DASHA_ORDER);return mk(`How long is ${g}’s Vimshottari mahadasha?`,gr(g).yrs+' years',[...new Set(GRAHAS.map(x=>x.yrs+' years'))])}},
+ aspect:{t:'Aspects',gen(){const g=rand(GRAHAS.slice(0,7));return mk(`Besides the 7th, which houses does ${g.n} aspect?`,g.asp,['Only the 7th','4th & 8th','5th & 9th','3rd & 10th'])}},
+ house:{t:'House meanings',gen(){const i=Math.floor(Math.random()*12);return mk(`Which house signifies: ${HOUSES[i].toLowerCase()}?`,ord(i+1),HOUSES.map((_,k)=>ord(k+1)))}}
+};
+function mk(q,ans,pool){const opts=shuffle([ans,...shuffle(pool.filter(p=>p!==ans)).slice(0,3)]);return {q,o:opts,a:opts.indexOf(ans)}}
+let drill=null;
+function vDrills(){
+ if(!drill){
+  const rows=Object.entries(DRILLS).map(([k,d])=>{const st=S.drills[k];return `<li><button class="lrow" data-drill="${k}"><span class="ltitle">${d.t}</span>${st?`<span class="badge">${Math.round(100*st.r/st.n)}% of ${st.n}</span>`:'<span class="badge">Not tried</span>'}</button></li>`}).join('');
+  bindAfter=()=>document.querySelectorAll('[data-drill]').forEach(b=>b.addEventListener('click',()=>startDrill(b.dataset.drill)));
+  return header()+`<h1>Drills</h1><p class="muted">Endless practice generated from the reference tables. Each round is 10 questions.</p>
+  <div class="panel"><ul class="list"><li><button class="lrow" data-drill="mixed"><span class="ltitle"><b>Mixed round</b></span><span class="badge">All topics</span></button></li>${rows}</ul></div>`;
+ }
+ const cur=drill.qs[drill.i];
+ bindAfter=()=>{
+  document.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{if(cur.picked!=null)return;cur.picked=+b.dataset.o;const ok=cur.picked===cur.a;
+   const st=S.drills[cur.cat]||{r:0,n:0};st.n++;if(ok)st.r++;S.drills[cur.cat]=st;if(ok)drill.score++;save();touchDay();render()}));
+  const nb=document.getElementById('dnext');nb&&nb.addEventListener('click',()=>{drill.i++;render()});
+  const qb=document.getElementById('dquit');qb&&qb.addEventListener('click',()=>{drill=null;render()});
+ };
+ if(drill.i>=drill.qs.length){const sc=drill.score;return header()+`<h1>Round finished</h1><div class="result ${sc>=6?'pass':'fail'}"><b>${sc} of 10 correct.</b></div><div class="row" style="margin-top:14px"><button class="btn" onclick="startDrill('${drill.kind}')">Play again</button><button class="btn ghost" id="dquit">All drills</button></div>`}
+ return header()+`<div class="row"><h1 style="font-size:1.4rem">${drill.kind==='mixed'?'Mixed round':DRILLS[drill.kind].t}</h1><span class="spacer"></span><span class="muted small">${drill.i+1} / 10</span></div>
+ <div class="bar" style="margin:10px 0"><i style="width:${drill.i*10}%"></i></div>
+ <div class="q"><p style="font-family:var(--serif);font-size:1.25rem;font-weight:500">${cur.q}</p>${cur.o.map((o,oi)=>{let c='';if(cur.picked!=null){if(oi===cur.a)c='right';else if(oi===cur.picked)c='wrong'}return `<button class="opt ${c}" data-o="${oi}">${o}</button>`}).join('')}</div>
+ <div class="row" style="margin-top:14px"><button class="btn ghost" id="dquit">End round</button><span class="spacer"></span>${cur.picked!=null?`<button class="btn" id="dnext">${drill.i===9?'See result':'Next question'}</button>`:''}</div>`;
+}
+function startDrill(kind){const keys=Object.keys(DRILLS);drill={kind,i:0,score:0,qs:Array.from({length:10},()=>{const k=kind==='mixed'?rand(keys):kind;return Object.assign(DRILLS[k].gen(),{cat:k,picked:null})})};render();window.scrollTo(0,0)}
+
+/* ---------- Flashcards (spaced repetition) ---------- */
+let cardState={id:null,show:false};
+function vCards(){
+ const due=dueCards();const total=Object.keys(S.cards).length;
+ if(!total)return header()+`<h1>Flashcards</h1><div class="panel"><p>Your deck is empty. Cards are added automatically when you open a lesson.</p><button class="btn" data-go="course">Open the course</button></div>`;
+ if(!due.length){const next=Math.min(...Object.values(S.cards).map(c=>c.due));const hrs=Math.max(1,Math.round((next-Date.now())/36e5));
+  return header()+`<h1>Flashcards</h1><div class="panel"><p><b>All caught up.</b> ${total} cards in your deck; the next one is due in about ${hrs<48?hrs+' hours':Math.round(hrs/24)+' days'}.</p><button class="btn ghost" data-go="drills">Practise with drills</button></div>`}
+ if(!due.includes(cardState.id))cardState={id:rand(due),show:false};
+ const c=cardContent(cardState.id);
+ bindAfter=()=>{
+  const sb=document.getElementById('show');sb&&sb.addEventListener('click',()=>{cardState.show=true;render()});
+  document.querySelectorAll('[data-grade]').forEach(b=>b.addEventListener('click',()=>{grade(cardState.id,b.dataset.grade);cardState={id:null,show:false};touchDay();render()}));
+ };
+ return header()+`<div class="row"><h1>Flashcards</h1><span class="spacer"></span><span class="muted small">${due.length} due</span></div>
+ <p class="muted small">From “${c.l.t}”</p>
+ <div class="card"><div>${c.f}</div>${cardState.show?`<div class="back">${c.b}</div>`:''}</div>
+ ${cardState.show?`<div class="grades"><button data-grade="again">Again</button><button data-grade="hard">Hard</button><button data-grade="good">Good</button><button data-grade="easy">Easy</button></div><p class="small muted" style="margin-top:8px">Rate honestly: cards you find hard come back sooner.</p>`:`<button class="btn" id="show" style="width:100%;margin-top:12px">Show answer</button>`}`;
+}
+function grade(id,g){const c=S.cards[id];const day=864e5;
+ if(g==='again'){c.i=0;c.e=Math.max(1.3,c.e-.2);c.due=Date.now()+10*60e3}
+ else if(g==='hard'){c.i=Math.max(1,c.i*1.2);c.e=Math.max(1.3,c.e-.15);c.due=Date.now()+c.i*day}
+ else if(g==='good'){c.i=c.i<1?1:c.i*c.e;c.due=Date.now()+c.i*day}
+ else{c.i=c.i<1?3:c.i*c.e*1.3;c.e+=.15;c.due=Date.now()+c.i*day}
+ save()}
+
+/* ---------- Doubts ---------- */
+let doubtFilter='open',doubtSearch='',doubtDraftLesson='';
+function vDoubts(){
+ const list=S.doubts.filter(d=>(doubtFilter==='all'||d.status===doubtFilter)&&(!doubtSearch||(d.q+' '+(d.note||'')).toLowerCase().includes(doubtSearch.toLowerCase()))).sort((a,b)=>b.created-a.created);
+ const lname=id=>id?(LESSONS.find(l=>l.id===id)||{}).t||'General':'General';
+ bindAfter=()=>{
+  document.getElementById('dAdd').addEventListener('click',()=>{const q=document.getElementById('dQ').value.trim();if(!q){toast('Write your question first');return}
+   S.doubts.push({id:Date.now().toString(36),lesson:document.getElementById('dL').value,q,note:'',status:'open',created:Date.now()});doubtDraftLesson='';save();touchDay();toast('Doubt saved');render()});
+  document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{doubtFilter=b.dataset.filter;render()}));
+  const s=document.getElementById('dSearch');s.addEventListener('input',()=>{doubtSearch=s.value;const pos=s.selectionStart;render();const n=document.getElementById('dSearch');n.focus();n.setSelectionRange(pos,pos)});
+  document.querySelectorAll('[data-act]').forEach(b=>b.addEventListener('click',()=>{const d=S.doubts.find(x=>x.id===b.dataset.id);const act=b.dataset.act;
+   if(act==='save'){d.note=document.getElementById('n_'+d.id).value;save();toast('Answer saved')}
+   if(act==='toggle'){d.note=document.getElementById('n_'+d.id).value;d.status=d.status==='open'?'resolved':'open';save();toast(d.status==='resolved'?'Marked resolved':'Reopened');render()}
+   if(act==='del'){if(confirm('Delete this doubt?')){S.doubts=S.doubts.filter(x=>x.id!==d.id);save();render()}}
+   if(act==='copy'){const l=LESSONS.find(x=>x.id===d.lesson);const txt=`I'm studying Parashari Jyotisha${l?` (topic: ${l.t})`:''}. My doubt: ${d.q}\nPlease explain step by step, say which classical text or school each rule comes from, and point out where schools disagree.`;
+    (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('Question copied for your AI tutor')).catch(()=>{prompt('Copy this text:',txt)})}
+  }));
+ };
+ return header()+`<h1>Doubts</h1><p class="muted">Write down every question as it comes up, then record the answer once you find it.</p>
+ <div class="panel"><label for="dL">Related lesson</label><select id="dL"><option value="">General</option>${LESSONS.map(l=>`<option value="${l.id}" ${doubtDraftLesson===l.id?'selected':''}>${l.t}</option>`).join('')}</select>
+ <label for="dQ">Your question</label><textarea id="dQ" placeholder="e.g. Why does Mars get a 4th and 8th aspect?"></textarea>
+ <button class="btn" id="dAdd" style="margin-top:10px">Save doubt</button></div>
+ <div class="tabs" role="group" aria-label="Filter">${[['open','Open'],['resolved','Resolved'],['all','All']].map(([k,t])=>`<button data-filter="${k}" aria-pressed="${doubtFilter===k}">${t}</button>`).join('')}</div>
+ <input type="search" id="dSearch" placeholder="Search doubts" value="${esc(doubtSearch)}" aria-label="Search doubts">
+ <div class="panel">${list.length?list.map(d=>`<div class="doubt"><div class="meta">${esc(lname(d.lesson))}, ${new Date(d.created).toLocaleDateString()} ${d.status==='resolved'?'<span class="badge pass">Resolved</span>':'<span class="badge try">Open</span>'}</div>
+  <p style="margin:6px 0;font-weight:600">${esc(d.q)}</p>
+  <label for="n_${d.id}">Answer or notes</label><textarea id="n_${d.id}">${esc(d.note||'')}</textarea>
+  <div class="row" style="margin-top:8px"><button class="btn ghost" data-act="save" data-id="${d.id}">Save answer</button><button class="btn ghost" data-act="toggle" data-id="${d.id}">${d.status==='open'?'Mark resolved':'Reopen'}</button><button class="btn ghost" data-act="copy" data-id="${d.id}">Copy for AI tutor</button><button class="btn ghost" data-act="del" data-id="${d.id}" style="color:var(--bad)">Delete</button></div></div>`).join(''):`<p class="muted" style="margin:0">${S.doubts.length?'No doubts match this filter.':'No doubts yet. Save your first question above.'}</p>`}</div>`;
+}
+
+/* ---------- Glossary ---------- */
+let gSearch='';
+function vGlossary(){
+ const list=GLOSSARY.filter(g=>!gSearch||g.join(' ').toLowerCase().includes(gSearch.toLowerCase()));
+ bindAfter=()=>{const s=document.getElementById('gS');s.addEventListener('input',()=>{gSearch=s.value;const p=s.selectionStart;render();const n=document.getElementById('gS');n.focus();n.setSelectionRange(p,p)})};
+ return header()+`<h1>Glossary</h1><input type="search" id="gS" placeholder="Search terms" value="${esc(gSearch)}" aria-label="Search glossary" style="margin-top:12px">
+ <div class="panel"><ul class="list">${list.map(g=>`<li style="padding:10px 0"><b>${g[0]}</b> <span class="deva muted">${g[1]}</span><div class="small">${g[2]}</div></li>`).join('')||'<li class="muted">No matching terms.</li>'}</ul></div>`;
+}
+
+/* ---------- Progress & settings ---------- */
+function vProgress(){
+ const weakL=LESSONS.filter(l=>S.lessons[l.id]&&S.lessons[l.id].best<75);
+ const weakD=Object.entries(S.drills).filter(([k,v])=>v.n>=5&&v.r/v.n<.7);
+ bindAfter=()=>{
+  document.getElementById('exp').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(S,null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`pathshala-backup-${today()}.json`;document.body.appendChild(a);a.click();a.remove();toast('Backup exported')});
+  document.getElementById('imp').addEventListener('click',()=>document.getElementById('importFile').click());
+  document.getElementById('ua').addEventListener('change',e=>{S.unlockAll=e.target.checked;save();toast(S.unlockAll?'All lessons unlocked':'Sequential unlocking on')});
+  document.getElementById('rst').addEventListener('click',()=>{if(confirm('Erase all progress, cards and doubts? This cannot be undone.')){S=blank();save();quiz=null;drill=null;render();toast('Progress erased')}});
+ };
+ return header()+`<h1>Progress</h1>
+ <div class="stats"><div class="stat"><strong>${LESSONS.filter(l=>passed(l.id)).length}/${LESSONS.length}</strong><span>lessons passed</span></div><div class="stat"><strong>${streak()}</strong><span>day streak</span></div><div class="stat"><strong>${S.days.length}</strong><span>days studied</span></div></div>
+ <h2>Needs revision</h2>
+ <div class="panel">${weakL.length||weakD.length?`<ul class="list">${weakL.map(l=>`<li><button class="lrow" data-go="lesson" data-arg="${l.id}"><span class="ltitle">${l.t}</span><span class="badge try">Best ${S.lessons[l.id].best}%</span></button></li>`).join('')}${weakD.map(([k,v])=>`<li><button class="lrow" onclick="startDrill('${k}')"><span class="ltitle">Drill: ${DRILLS[k].t}</span><span class="badge try">${Math.round(100*v.r/v.n)}%</span></button></li>`).join('')}</ul>`:'<p class="muted" style="margin:0">Nothing flagged. Lessons under 75% and drills under 70% will show up here.</p>'}</div>
+ <h2>Settings</h2>
+ <div class="panel">
+  <label style="display:flex;gap:10px;align-items:center;color:var(--ink);font-size:1rem;margin:0"><input type="checkbox" id="ua" ${S.unlockAll?'checked':''}> Unlock all lessons (for revision)</label>
+  <div class="row" style="margin-top:14px"><button class="btn ghost" id="exp">Export backup</button><button class="btn ghost" id="imp">Import backup</button><span class="spacer"></span><button class="btn warn" id="rst">Erase progress</button></div>
+  <p class="small muted" style="margin-top:10px">Progress is saved in this browser only. Export a backup before clearing browser data or switching devices.</p>
+ </div>`;
+}
+document.getElementById('importFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.lessons||!d.cards)throw 0;S=Object.assign(blank(),d);save();toast('Backup imported');render()}catch(err){toast('That file is not a Pathshala backup')}e.target.value=''};r.readAsText(f)});
+
+render();
+</script>
+</body>
+</html>
